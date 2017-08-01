@@ -110,4 +110,27 @@ df.drop(df.index[15:], axis=0,inplace=True)
 def answer_one():
 	return df
 	
-answer_one()	
+#answer_one()	
+
+######### Question 2
+
+#how many countries in ScimEn?
+idx1 = pd.Index(ScimEn['Country'])
+#how many countries in energy?
+idx2 = pd.Index(energy['Country'])
+#difference
+diff1 = idx1.difference(idx2)
+#print(diff1.size)
+#how many countries in the merge of ScimEn and energy?
+indx3 = pd.Index(df_temp['Country'])
+#how many countries in gdp?
+indx4 = pd.Index(gdp['Country'])
+#difference
+diff2 = indx3.difference(indx4)
+#print(diff2)
+#print(diff2.size)
+
+def answer_two():
+	return diff1.size + diff2.size
+	
+print(answer_two())	
