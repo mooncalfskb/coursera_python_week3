@@ -74,6 +74,21 @@ df_temp = pd.merge(ScimEn, energy, on='Country', how='inner')
 df = pd.merge(df_temp, gdp, on='Country', how='inner')
 
 df.set_index('Country', inplace=True)
+#drop extra years
+df.drop(df.columns[13:59], axis=1,inplace=True)
+#drop country code from gdp
+df.drop(df.columns[10:13], axis=1,inplace=True)
+#drop 2016
+df.drop(df.columns[[20]], axis=1,inplace=True)
 
 print(df.head(n=10))
 print(df.shape)
+#list column names:
+print(list(df))
+
+#my dataframe
+#['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015']
+
+#from assignment
+#['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015']
+
