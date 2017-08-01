@@ -133,4 +133,22 @@ diff2 = indx3.difference(indx4)
 def answer_two():
 	return diff1.size + diff2.size
 	
-print(answer_two())	
+#print(answer_two())
+
+######### Question 3
+#What is the average GDP over the last 10 years for each country? (exclude missing values from this calculation.)
+
+#*This function should return a Series named `avgGDP` with 15 countries and their average GDP sorted in descending order.*	
+
+def answer_three():
+    Top15 = answer_one()
+    Top15['avg'] = Top15[['2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015']].mean(axis=1)
+    #ditch columns
+    avg_df = Top15.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'], axis=1)
+    #sort (note the 13 on the us number, not 12)
+    avg_df.sort_values(by=['avg'], ascending=[False], inplace=True)
+    #pick first column as series
+    avgGDP = avg_df.ix[:,0]
+	#print(avgGDP)
+	#print(type(avgGDP))
+    return avgGDP
