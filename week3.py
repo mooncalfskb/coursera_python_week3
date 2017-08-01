@@ -8,6 +8,7 @@
 import pandas as pd
 import numpy as np
 
+######### ENERGY INDICATORS
 xl = pd.ExcelFile("Energy Indicators.xls", skiprows=18)
 xl.sheet_names
 #Energy
@@ -36,6 +37,26 @@ energy['Country'] = energy['Country'].str.replace(r'\(.*?\)', '')
 
 #debug
 #hongkong = energy.loc[energy['Country'] == 'United States of America']
-dude = energy[energy['Country'].str.contains("Bolivia")]
+#dude = energy[energy['Country'].str.contains("Bolivia")]
+#print(dude)
 
-print(dude)
+#print(energy.head(n=10))
+######### ENERGY INDICATORS
+
+
+######### GDP
+gdp = pd.read_csv('world_bank.csv', skiprows=4)
+#drop empty column at end
+gdp.drop(gdp.columns[[61]], axis=1,inplace=True)
+#rename country name to country
+gdp.rename(columns = {'Country Name':'Country'}, inplace = True)
+#fix some country names
+gdp['Country'].replace({'Korea, Rep.': 'South Korea', 'Iran, Islamic Rep.': 'Iran', 'Hong Kong SAR, China': 'Hong Kong'}, inplace=True)
+
+#debug
+#dude = gdp[gdp['Country'].str.contains("Hong Kong")]
+#print(dude)
+
+print(gdp.head(n=10))
+######### GDP
+
