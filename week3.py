@@ -23,4 +23,19 @@ energy.rename(columns = {'Environmental Indicators: Energy':'Country', 'Unnamed:
 energy.replace({'...': np.nan}, inplace=True)
 #convert to gigajoules
 energy['Energy Supply'] = energy['Energy Supply'].apply(lambda x: x*1000000)
-print(energy)
+
+#kill crazy footnotes
+energy['Country'] = energy['Country'].str.replace(r'[0-9]', '')
+
+#change names
+energy['Country'].replace({'Republic of Korea': 'South Korea', 'United States of America': 'United States', 'United Kingdom of Great Britain and Northern Ireland': 'United Kingdom', 'China, Hong Kong Special Administrative Region': 'Hong Kong'}, inplace=True)
+
+#kill parens
+energy['Country'] = energy['Country'].str.replace(r'\(.*?\)', '')
+
+
+#debug
+#hongkong = energy.loc[energy['Country'] == 'United States of America']
+dude = energy[energy['Country'].str.contains("Bolivia")]
+
+print(dude)
