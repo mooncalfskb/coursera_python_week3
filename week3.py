@@ -249,7 +249,7 @@ def answer_nine():
     correlation = Top15['Citable docs per Capita'].corr(Top15['Energy Supply per Capita'])
     return correlation
 
-print(answer_nine())   
+#print(answer_nine())   
 	
 	
 def plot9():
@@ -259,6 +259,15 @@ def plot9():
     Top15 = answer_one()
     Top15['PopEst'] = Top15['Energy Supply'] / Top15['Energy Supply per Capita']
     Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
-    return Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
+    Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
 
-print(plot9())   
+#print(plot9())
+
+
+### Question 10 (6.6%)
+#Create a new column with a 1 if the country's % Renewable value is at or above the median for all countries in the top 15, and a 0 if the country's % Renewable value is below the median.
+#This function should return a series named HighRenew whose index is the country name sorted in ascending order of rank.
+
+def answer_ten():
+    Top15 = answer_one()
+    return "ANSWER"
