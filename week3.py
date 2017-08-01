@@ -152,3 +152,47 @@ def answer_three():
 	#print(avgGDP)
 	#print(type(avgGDP))
     return avgGDP
+    
+######### Question 4    
+#Question 4 (6.6%)
+#By how much had the GDP changed over the 10 year span for the country with the 6th largest average GDP?
+#This function should return a single number. 
+#United Kingdom        2.487907e+12
+   
+def answer_four():
+    Top15 = answer_one()
+    avgGDP = answer_three()
+	#took an hour to figure this out although seems very easy
+    sixth = avgGDP.index[5]
+    #print(sixth)
+    country_six = Top15.loc[sixth]
+    #print(country_six)
+    return country_six['2015'] - country_six['2006']
+    
+
+#answer_four()
+
+### Question 5 (6.6%)
+#What is the mean `Energy Supply per Capita`?
+def answer_five():
+    Top15 = answer_one()
+    energy_supply = Top15['Energy Supply per Capita']
+    mean_energy = energy_supply.mean()
+    return mean_energy
+    
+#print(answer_five())    
+
+
+### Question 6 (6.6%)
+#What country has the maximum % Renewable and what is the percentage?
+#This function should return a tuple with the name of the country and the percentage.    
+
+def answer_six():
+    Top15 = answer_one()
+    energy_supply = Top15['Energy Supply per Capita']
+    mean_energy = energy_supply.mean()
+    return mean_energy
+    
+    
+    
+
