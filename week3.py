@@ -189,10 +189,16 @@ def answer_five():
 
 def answer_six():
     Top15 = answer_one()
-    energy_supply = Top15['Energy Supply per Capita']
-    mean_energy = energy_supply.mean()
-    return mean_energy
+    max_renew = Top15['% Renewable'].max()
+    max_row = Top15.loc[Top15['% Renewable'] == max_renew]
+    country = max_row.index[0]
+    #print(country)
+    renewable_rate = str(max_row['% Renewable'][0])
+    #print(renewable_rate)
+    my_list = [country, renewable_rate]
+    return tuple(my_list)
     
+print(answer_six())    
     
     
 
