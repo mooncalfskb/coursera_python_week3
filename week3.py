@@ -24,7 +24,6 @@ energy.rename(columns = {'Environmental Indicators: Energy':'Country', 'Unnamed:
 energy.replace({'...': np.nan}, inplace=True)
 #convert to gigajoules
 energy['Energy Supply'] = energy['Energy Supply'].apply(lambda x: x*1000000)
-
 #kill crazy footnotes
 energy['Country'] = energy['Country'].str.replace(r'[0-9]', '')
 
@@ -34,61 +33,81 @@ energy['Country'].replace({'Republic of Korea': 'South Korea', 'United States of
 #kill parens
 energy['Country'] = energy['Country'].str.replace(r'\(.*?\)', '')
 
+#trim Country names in case there's some bullshit, like in iran
+energy['Country'] = energy['Country'].apply(lambda x: x.lstrip().rstrip())
+
 
 #debug
-#hongkong = energy.loc[energy['Country'] == 'United States of America']
-#dude = energy[energy['Country'].str.contains("Bolivia")]
-#print(dude)
+#iran = energy.loc[energy['Country'] == 'Iran']
+#print(iran)
 
 #print(energy.head(n=10))
-print(energy.shape)
+#print(energy.shape)
 ######### ENERGY INDICATORS
 
 
 ######### GDP
 gdp = pd.read_csv('world_bank.csv', skiprows=4)
 #drop empty column at end
-gdp.drop(gdp.columns[[61]], axis=1,inplace=True)
+#gdp.drop(gdp.columns[[61]], axis=1,inplace=True)
 #rename country name to country
 gdp.rename(columns = {'Country Name':'Country'}, inplace = True)
 #fix some country names
 gdp['Country'].replace({'Korea, Rep.': 'South Korea', 'Iran, Islamic Rep.': 'Iran', 'Hong Kong SAR, China': 'Hong Kong'}, inplace=True)
-
+#trim Country names in case there's some bullshit, like in iran
+gdp['Country'] = gdp['Country'].apply(lambda x: x.lstrip().rstrip())
 #debug
-#dude = gdp[gdp['Country'].str.contains("Hong Kong")]
-#print(dude)
+#dude = gdp[gdp['Country'].str.contains("Iran")]
+#iran = gdp.loc[gdp['Country'] == 'Iran']
+#print(iran)
 
 #print(gdp.head(n=10))
-print(gdp.shape)
+#print(gdp.shape)
 
 ######### GDP
 
 ######### ScimEn
 x2 = pd.ExcelFile("scimagojr-3.xlsx")
 ScimEn = x2.parse("Sheet1")
+#trim Country names in case there's some bullshit, like in iran
+ScimEn['Country'] = ScimEn['Country'].apply(lambda x: x.lstrip().rstrip())
+#iran = ScimEn.loc[ScimEn['Country'] == 'Iran']
+#print(iran)
+
 #print(ScimEn.head(n=10))
-print(ScimEn.shape)
+#print(ScimEn.shape)
+######### ScimEn
+
+
+######### Big Dataframe
 
 #merge dataframes
 df_temp = pd.merge(ScimEn, energy, on='Country', how='inner')
 df = pd.merge(df_temp, gdp, on='Country', how='inner')
 
 df.set_index('Country', inplace=True)
+#print(df.head(n=15))
+
 #drop extra years
 df.drop(df.columns[13:59], axis=1,inplace=True)
 #drop country code from gdp
 df.drop(df.columns[10:13], axis=1,inplace=True)
 #drop 2016
-df.drop(df.columns[[20]], axis=1,inplace=True)
+#df.drop(df.columns[[20]], axis=1,inplace=True)
 
-print(df.head(n=10))
-print(df.shape)
+#drop footer
+df.drop(df.index[15:], axis=0,inplace=True)
+
+#debug
+#print(df.head(n=15))
+#print(df.shape)
 #list column names:
-print(list(df))
+#print(list(df))
 
-#my dataframe
-#['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015']
+######### Big Dataframe
 
-#from assignment
-#['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015']
 
+def answer_one():
+	return df
+	
+answer_one()	
