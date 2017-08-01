@@ -7,6 +7,8 @@
 ##### set up df
 import pandas as pd
 import numpy as np
+import matplotlib as plt
+
 
 ######### ENERGY INDICATORS
 xl = pd.ExcelFile("Energy Indicators.xls", skiprows=18)
@@ -198,7 +200,65 @@ def answer_six():
     my_list = [country, renewable_rate]
     return tuple(my_list)
     
-print(answer_six())    
+#print(answer_six())    
     
-    
+### Question 7 (6.6%)
+#Create a new column that is the ratio of Self-Citations to Total Citations. What is the maximum value for this new column, and what country has the highest ratio?
+#This function should return a tuple with the name of the country and the ratio.    
 
+def answer_seven():
+    Top15 = answer_one()
+    Citations = Top15
+    Citations['citation_ratio'] = Citations['Self-citations'] / Citations['Citations']
+    max_renew = Top15['citation_ratio'].max()
+    #print(Top15)
+    #print(max_renew)
+    max_row = Citations.loc[Top15['citation_ratio'] == max_renew]
+    country = max_row.index[0]
+    #print(country)
+    renewable_rate = str(max_row['citation_ratio'][0])
+    #print(renewable_rate)
+    my_list = [country, renewable_rate]
+    return tuple(my_list)
+
+#print(answer_seven())    
+  
+### Question 8 (6.6%)
+#Create a column that estimates the population using Energy Supply and Energy Supply per capita. What is the third most populous country according to this estimate?
+#This function should return a single string value.
+
+def answer_eight():
+    Top15 = answer_one()
+    Pop = Top15
+    Pop['est_pop'] = Pop['Energy Supply'] / Pop['Energy Supply per Capita']
+    Pop.sort_values(by=['est_pop'], ascending=[False], inplace=True)
+    return Pop.index[2]
+
+#print(answer_eight())   
+
+
+#### Question 9 (6.6%)
+#Create a column that estimates the number of citable documents per person. What is the correlation between the number of citable documents per capita and the energy supply per capita? Use the .corr() method, (Pearson's correlation).
+#This function should return a single number.
+#(Optional: Use the built-in function plot9() to visualize the relationship between Energy Supply per Capita vs. Citable docs per Capita)
+
+def answer_nine():
+    Top15 = answer_one()
+    Top15['PopEst'] = Top15['Energy Supply'] / Top15['Energy Supply per Capita']
+    Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
+    correlation = Top15['Citable docs per Capita'].corr(Top15['Energy Supply per Capita'])
+    return correlation
+
+print(answer_nine())   
+	
+	
+def plot9():
+    import matplotlib as plt
+    #%matplotlib inline
+    
+    Top15 = answer_one()
+    Top15['PopEst'] = Top15['Energy Supply'] / Top15['Energy Supply per Capita']
+    Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
+    return Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
+
+print(plot9())   
