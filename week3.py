@@ -124,7 +124,7 @@ def answer_two():
 	idx2 = pd.Index(energy['Country'])
 	#difference
 	diff1 = idx1.difference(idx2)
-	print(diff1)
+	list1 = list(diff1)
 	#print(diff1.size)
 	#how many countries in the merge of ScimEn and energy?
 	indx3 = pd.Index(df_temp['Country'])
@@ -132,9 +132,11 @@ def answer_two():
 	indx4 = pd.Index(gdp['Country'])
 	#difference
 	diff2 = indx3.difference(indx4)
+	list2 = list(diff2)
+	return list1 + list2
 	#print(diff2)
 	#print(diff2.size)
-	return diff1 + diff2
+	#return diff1 + diff2
 	
 print(answer_two())
 
@@ -290,7 +292,7 @@ def plot9():
 def answer_ten():
     Top15 = answer_one()
     renew = Top15['% Renewable']
-    mean_renew = renew.mean()
+    mean_renew = renew.median()
     Renewable = Top15
     Renewable.sort_index(inplace=True)
     #rate = lambda T: 200*exp(-T) if T>200 else 400*exp(-T)
