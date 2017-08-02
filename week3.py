@@ -270,4 +270,93 @@ def plot9():
 
 def answer_ten():
     Top15 = answer_one()
-    return "ANSWER"
+    renew = Top15['% Renewable']
+    mean_renew = renew.mean()
+    Renewable = Top15
+    Renewable.sort_index(inplace=True)
+    #rate = lambda T: 200*exp(-T) if T>200 else 400*exp(-T)
+    Renewable['HighRenew'] = Renewable['% Renewable'].apply(lambda x: 1 if x >= mean_renew else 0)
+    Renewable.sort_values(by=['HighRenew'], ascending=[True], inplace=True)
+    Renewable = Renewable.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'], axis=1)
+    HighRenew = Renewable.ix[:,0]
+    return HighRenew
+
+#print(answer_ten())   
+
+
+### Question 11 (6.6%)
+#Use the following dictionary to group the Countries by Continent, then create a dateframe that displays the sample size (the number of countries in each continent bin), and the sum, mean, and std deviation for the estimated population of each country.
+
+ContinentDict  = {'China':'Asia', 'United States':'North America', 'Japan':'Asia', 'United Kingdom':'Europe', 'Russian Federation':'Europe', 'Canada':'North America', 'Germany':'Europe', 'India':'Asia', 'France':'Europe', 'South Korea':'Asia', 'Italy':'Europe', 'Spain':'Europe', 'Iran':'Asia','Australia':'Australia', 'Brazil':'South America'}
+
+#This function should return a DataFrame with index named Continent ['Asia', 'Australia', 'Europe', 'North America', 'South America'] and columns ['size', 'sum', 'mean', 'std']
+
+def answer_eleven():
+    Top15 = answer_one()
+    Conts = Top15
+    #set up population estimate
+    Conts['PopEst'] = Conts['Energy Supply'] / Conts['Energy Supply per Capita']
+    length = len(Conts)
+    #print(length)
+    #set continent = 0 
+    Conts['Continent'] = 0
+    #print(Conts['Continent'])
+
+    #tried to do this with lambda but couldn't figure it out.
+    pd.options.mode.chained_assignment = None
+    for x in range(0, length):
+        Conts['Continent'].iloc[x] = ContinentDict[Conts.index[x]]
+    
+    cont_size = Conts['Continent'].value_counts()
+    
+    #start your new dataframe
+    df = pd.DataFrame({'Continent':cont_size.index, 'size':cont_size.values, 'sum':0, 'mean':0, 'std':0})
+    
+    length_df = len(df)
+    for x in range(0, length_df):
+    	this_cont = Conts[Conts['Continent'] == df['Continent'].iloc[x]]
+    	df['sum'].iloc[x] = this_cont['PopEst'].sum()
+    	df['mean'].iloc[x] = this_cont['PopEst'].mean()
+    	df['std'].iloc[x] = this_cont['PopEst'].std()
+    df.set_index('Continent', inplace=True)
+
+    return df
+
+#print(answer_eleven())   
+
+
+### Question 12 (6.6%)
+#Cut % Renewable into 5 bins. Group Top15 by the Continent, as well as these new % Renewable bins. How many countries are in each of these groups?
+#This function should return a Series with a MultiIndex of Continent, then the bins for % Renewable. Do not include groups with no countries.
+
+def answer_twelve():
+    Top15 = answer_one()
+    Conts = Top15
+    #set up population estimate
+    Conts['PopEst'] = Conts['Energy Supply'] / Conts['Energy Supply per Capita']
+    length = len(Conts)
+    #print(length)
+    #set continent = 0 
+    Conts['Continent'] = 0
+    #print(Conts['Continent'])
+
+    #tried to do this with lambda but couldn't figure it out.
+    pd.options.mode.chained_assignment = None
+    for x in range(0, length):
+        Conts['Continent'].iloc[x] = ContinentDict[Conts.index[x]]
+    
+    renew = Top15['% Renewable']
+    renew_bins = pd.cut(renew, 5)
+    group_names = ['F', 'D', 'C', 'B', 'A']
+    Conts['bins'] = pd.cut(Conts['% Renewable'], 5)
+    Conts['categories'] = pd.cut(Conts['% Renewable'], 5, labels=group_names)
+    
+    #df1.groupby( [ "Name", "City"] ).count()
+    grouped = Conts.groupby(['Continent', 'bins']).count()
+    grouped = grouped.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', 'PopEst'], axis=1)
+    grouped.dropna(axis=0,inplace=True)
+    grouped.rename(columns = {'categories':'countries'}, inplace = True)
+    group_series = grouped.ix[:,0]
+    return group_series
+
+print(answer_twelve())
