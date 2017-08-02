@@ -116,26 +116,27 @@ def answer_one():
 
 ######### Question 2
 
-#how many countries in ScimEn?
-idx1 = pd.Index(ScimEn['Country'])
-#how many countries in energy?
-idx2 = pd.Index(energy['Country'])
-#difference
-diff1 = idx1.difference(idx2)
-#print(diff1.size)
-#how many countries in the merge of ScimEn and energy?
-indx3 = pd.Index(df_temp['Country'])
-#how many countries in gdp?
-indx4 = pd.Index(gdp['Country'])
-#difference
-diff2 = indx3.difference(indx4)
-#print(diff2)
-#print(diff2.size)
 
 def answer_two():
-	return diff1.size + diff2.size
+	#how many countries in ScimEn?
+	idx1 = pd.Index(ScimEn['Country'])
+	#how many countries in energy?
+	idx2 = pd.Index(energy['Country'])
+	#difference
+	diff1 = idx1.difference(idx2)
+	print(diff1)
+	#print(diff1.size)
+	#how many countries in the merge of ScimEn and energy?
+	indx3 = pd.Index(df_temp['Country'])
+	#how many countries in gdp?
+	indx4 = pd.Index(gdp['Country'])
+	#difference
+	diff2 = indx3.difference(indx4)
+	#print(diff2)
+	#print(diff2.size)
+	return diff1 + diff2
 	
-#print(answer_two())
+print(answer_two())
 
 ######### Question 3
 #What is the average GDP over the last 10 years for each country? (exclude missing values from this calculation.)
@@ -195,7 +196,8 @@ def answer_six():
     max_row = Top15.loc[Top15['% Renewable'] == max_renew]
     country = max_row.index[0]
     #print(country)
-    renewable_rate = str(max_row['% Renewable'][0])
+    #not a string!
+    renewable_rate = max_row['% Renewable'][0]
     #print(renewable_rate)
     my_list = [country, renewable_rate]
     return tuple(my_list)
@@ -216,7 +218,7 @@ def answer_seven():
     max_row = Citations.loc[Top15['citation_ratio'] == max_renew]
     country = max_row.index[0]
     #print(country)
-    renewable_rate = str(max_row['citation_ratio'][0])
+    renewable_rate = max_row['citation_ratio'][0]
     #print(renewable_rate)
     my_list = [country, renewable_rate]
     return tuple(my_list)
@@ -268,6 +270,23 @@ def plot9():
 #Create a new column with a 1 if the country's % Renewable value is at or above the median for all countries in the top 15, and a 0 if the country's % Renewable value is below the median.
 #This function should return a series named HighRenew whose index is the country name sorted in ascending order of rank.
 
+#my correct answer in python 
+# def answer_ten():
+#     Top15 = answer_one()
+#     renew = Top15['% Renewable']
+#     mean_renew = renew.mean()
+#     Renewable = Top15
+#     Renewable.sort_index(inplace=True)
+#     #rate = lambda T: 200*exp(-T) if T>200 else 400*exp(-T)
+#     Renewable['HighRenew'] = Renewable['% Renewable'].apply(lambda x: 1 if x >= mean_renew else 0)
+#     Renewable.sort_values(by=['HighRenew'], ascending=[True], inplace=True)
+#     Renewable = Renewable.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'], axis=1)
+#     HighRenew = Renewable.ix[:,0]
+#     return HighRenew
+
+#print(answer_ten())   
+
+#submitted for answer because weirdness on site
 def answer_ten():
     Top15 = answer_one()
     renew = Top15['% Renewable']
@@ -278,10 +297,8 @@ def answer_ten():
     Renewable['HighRenew'] = Renewable['% Renewable'].apply(lambda x: 1 if x >= mean_renew else 0)
     Renewable.sort_values(by=['HighRenew'], ascending=[True], inplace=True)
     Renewable = Renewable.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'], axis=1)
-    HighRenew = Renewable.ix[:,0]
+    HighRenew = Renewable.ix[:,5]
     return HighRenew
-
-#print(answer_ten())   
 
 
 ### Question 11 (6.6%)
@@ -359,4 +376,40 @@ def answer_twelve():
     group_series = grouped.ix[:,0]
     return group_series
 
-print(answer_twelve())
+#print(answer_twelve())
+
+### Question 13
+#Convert the Population Estimate series to a string with thousands separator (using commas). Do not round the results.
+#e.g. 317615384.61538464 -> 317,615,384.61538464
+#This function should return a Series PopEst whose index is the country name and whose values are the population estimate string.
+
+# def answer_thirteen():
+#     Top15 = answer_one()
+#     Pops = Top15
+#     #set up population estimate
+#     Pops['PopEst'] = Pops['Energy Supply'] / Pops['Energy Supply per Capita']
+#     
+#     #print ("{:,.10f}".format(Pops['PopEst'].iloc[0]))
+#     Pops['PopEstThou'] = Pops['PopEst'].apply(lambda x: "{:,.8f}".format(x))
+#     #Pops = Pops.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'])
+#     #print(Pops)
+#     #note this was 25 on the thing because of crazy code interacting.
+#     PopEst = Pops.ix[:,21]
+#     return PopEst
+# print(answer_thirteen())
+
+
+#submitted for grade because weirdness on site
+def answer_thirteen():
+    Top15 = answer_one()
+    Pops = Top15
+    #set up population estimate
+    Pops['PopEst'] = Pops['Energy Supply'] / Pops['Energy Supply per Capita']
+    
+    #print ("{:,.10f}".format(Pops['PopEst'].iloc[0]))
+    #without forced float
+    Pops['PopEstThou'] = Pops['PopEst'].apply(lambda x: "{:,}".format(x))
+    #Pops = Pops.drop(['Rank', 'Documents', 'Citable documents', 'Citations', 'Self-citations', 'Citations per document', 'H index', 'Energy Supply', 'Energy Supply per Capita', '% Renewable', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'])
+    #print(Pops)
+    PopEst = Pops.ix[:,29]
+    return PopEst
